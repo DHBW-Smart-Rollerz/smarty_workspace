@@ -52,7 +52,10 @@ pip install pre-commit
 # Iterate over each repository in the workspace
 for repo in $(find "$WORKSPACE_DIR" -maxdepth 3 -name ".git" | xargs -n1 dirname); do
     echo "Setting up .pre-commit-config.yaml in $repo"
-    cp "$CONFIG_FILE" "$repo/.pre-commit-config.yaml"
+    if [ ! -f "$repo/.pre-commit-config.yaml" ]; then
+        cp "$CONFIG_FILE" "$repo/.pre-commit-config.yaml"
+    fi
+    cd "$repo"
     pre-commit install -f --install-hooks
 done
 
