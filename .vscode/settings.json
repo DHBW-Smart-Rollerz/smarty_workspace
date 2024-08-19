@@ -8,6 +8,7 @@
 "python.testing.pytestEnabled": true,
 "autoDocstring.docstringFormat": "pep257",
 "autoDocstring.startOnNewLine": true,
+"autoDocstring.generateDocstringOnEnter": true,
 "workbench.colorCustomizations": {
       "tab.activeBorder": "#ffffff",
       "tab.activeBackground": "#373737"
