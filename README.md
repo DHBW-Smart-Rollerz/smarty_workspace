@@ -29,13 +29,41 @@ This is the basic ros2 workspace for the Smarty project. It contains useful setu
 
 ## Setup
 
+The setup is divided into two parts:
+
+1. Setup repository and workspace
+2. Setup VSCode
+
+### 1. Setup repository and workspace
+
 1. Clone the repository
 2. Run the setup script
 ```bash
 ./setup.sh
 ```
 
-**Note**: The setup script clones the base packages. The other packages need to be cloned manually.
+This script clones the base packages and installs the dependencies. Currently, the following packages are cloned:
+
+- [smarty_utils](https://github.com/DHBW-Smart-Rollerz/smarty_utils)
+- [camera_preprocessing](https://github.com/DHBW-Smart-Rollerz/camera_preprocessing)
+
+Furthermore, the pre-commit hooks are installed. More about the pre-commit hooks can be found [here](https://pre-commit.com/).
+
+### 2. Setup VSCode
+
+1. Install the recommended extensions:
+
+  ```bash
+  cd <path/to/smarty_workspace>
+  ./scripts/install_extensions.sh
+  ```
+
+2. Open the workspace in VSCode and check if the extensions are installed.
+3. If the extensions are not installed, install them manually:
+   1. Open the extensions tab in VSCode
+   2. Search for `@recommended` and install all workspace recommendations
+   3. Reload the workspace
+   4. Check if the extensions are installed
 
 ## Usage
 
