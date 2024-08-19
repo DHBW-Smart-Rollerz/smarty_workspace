@@ -74,11 +74,41 @@ Open the folder in VSCode and start developing. The workspace is configured to u
 
 - `black`: Code formatter for python to have a consistent code style
 - `flake8`: Linter for python to check the code for errors and style
-- `pep257`: Linter for python to check the docstrings
+- `pep257`: Linter for python to check the docstrings (we use the pydocstyle formatter)
 - `isort`: Import sorter for python to have a consistent import order
 - `check-yaml`: Linter for yaml files to check the syntax
 - `end-of-file-fixer`: Linter to check if the files end with a newline
 - `trailing-whitespace`: Linter to check for trailing whitespaces
+
+To run the pre-commit hooks manually, use the following command:
+
+```bash
+pre-commit run --all-files
+```
+
+To run the tests, use the following command:
+
+```bash
+./scripts/test.sh
+```
+
+To build the workspace, use the following command:
+
+```bash
+./scripts/build.sh
+```
+
+To install the dependencies, use the following command:
+
+```bash
+./scripts/install_dependencies.sh
+```
+
+To run the setup script again, use the following command:
+
+```bash
+./setup.sh -f # Force the copy of the .pre-commit-config.yaml file
+```
 
 ## Contributing
 
