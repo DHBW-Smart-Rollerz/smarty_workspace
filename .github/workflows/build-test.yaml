@@ -26,6 +26,8 @@ jobs:
         git clone https://github.com/DHBW-Smart-Rollerz/smarty_workspace.git
         cd smarty_workspace
         export ROS_DISTRO=jazzy
+        python3 -m venv venv
+        source venv/bin/activate
         ./setup.sh
         ./scripts/install_dependencies.sh
         ./scripts/build.sh
