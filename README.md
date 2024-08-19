@@ -39,6 +39,9 @@ The setup is divided into two parts:
 1. Clone the repository
 2. Run the setup script
 ```bash
+#If not activated:
+pyenv  activate default # or your private environment
+pip install -r requirements.txt
 ./setup.sh
 ```
 
@@ -67,9 +70,15 @@ Furthermore, the pre-commit hooks are installed. More about the pre-commit hooks
 
 ## Usage
 
-Open the folder in VSCode and start developing.
+Open the folder in VSCode and start developing. The workspace is configured to use the pre-commit hooks. This means that the code is checked before committing. If the code is not compliant with the rules, the commit is rejected and the files are changed accordingly. We use the following pre-commit hooks:
 
-**Note**: Only VSCode is supported for now, but feel free to add support for other IDEs.
+- `black`: Code formatter for python to have a consistent code style
+- `flake8`: Linter for python to check the code for errors and style
+- `pep257`: Linter for python to check the docstrings
+- `isort`: Import sorter for python to have a consistent import order
+- `check-yaml`: Linter for yaml files to check the syntax
+- `end-of-file-fixer`: Linter to check if the files end with a newline
+- `trailing-whitespace`: Linter to check for trailing whitespaces
 
 ## Contributing
 
