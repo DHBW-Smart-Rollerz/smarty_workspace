@@ -9,7 +9,7 @@ on:
       - jazzy*
 
 jobs:
-  build_docker:
+  build:
     runs-on: ubuntu-24.04
     container:
       image: ubuntu:noble
