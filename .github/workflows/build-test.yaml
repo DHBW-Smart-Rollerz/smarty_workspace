@@ -26,7 +26,7 @@ jobs:
         git clone https://github.com/DHBW-Smart-Rollerz/smarty_workspace.git
         cd smarty_workspace
         export ROS_DISTRO=jazzy
-        apt install python3.12-venv
+        apt install -y python3.12-venv
         python3 -m venv venv
         source venv/bin/activate
         ./setup.sh
