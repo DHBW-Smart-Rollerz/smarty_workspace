@@ -22,7 +22,6 @@ jobs:
       uses: ros-tooling/setup-ros@v0.7
       with:
         required-ros-distributions: jazzy
-    - run: "source /opt/ros/jazzy/setup.bash"
     - run: |
         git clone https://github.com/DHBW-Smart-Rollerz/smarty_workspace.git
         cd smarty_workspace
