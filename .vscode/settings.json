@@ -8,6 +8,7 @@
 "python.testing.pytestEnabled": true,
 "autoDocstring.docstringFormat": "pep257",
 "autoDocstring.startOnNewLine": true,
+"autoDocstring.generateDocstringOnEnter": true,
 "workbench.colorCustomizations": {
       "tab.activeBorder": "#ffffff",
       "tab.activeBackground": "#373737"
@@ -26,5 +27,19 @@
     "gradle": false,
     "composer": false,
     "ant": false
-}
+},
+"python.autoComplete.extraPaths": [
+    "/home/tom/smarty_workspace/build/timing",
+    "/home/tom/smarty_workspace/build/ros2_example_package",
+    "/home/tom/smarty_workspace/build/camera_preprocessing",
+    "/home/tom/smarty_workspace/install/lib/python3.12/site-packages",
+    "/opt/ros/jazzy/lib/python3.12/site-packages"
+],
+"python.analysis.extraPaths": [
+    "/home/tom/smarty_workspace/build/timing",
+    "/home/tom/smarty_workspace/build/ros2_example_package",
+    "/home/tom/smarty_workspace/build/camera_preprocessing",
+    "/home/tom/smarty_workspace/install/lib/python3.12/site-packages",
+    "/opt/ros/jazzy/lib/python3.12/site-packages"
+]
 }

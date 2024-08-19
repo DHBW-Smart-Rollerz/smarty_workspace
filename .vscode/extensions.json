@@ -19,5 +19,8 @@
         "christian-kohler.path-intellisense",
         "zeshuaro.vscode-python-poetry",
         "ms-toolsai.jupyter",
+        "njpwerner.autodocstring",
+        "jeff-hykin.better-cpp-syntax",
+        "streetsidesoftware.code-spell-checker"
     ]
 }

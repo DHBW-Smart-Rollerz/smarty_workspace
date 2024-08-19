@@ -29,19 +29,86 @@ This is the basic ros2 workspace for the Smarty project. It contains useful setu
 
 ## Setup
 
+The setup is divided into two parts:
+
+1. Setup repository and workspace
+2. Setup VSCode
+
+### 1. Setup repository and workspace
+
 1. Clone the repository
 2. Run the setup script
 ```bash
+#If not activated:
+pyenv  activate default # or your private environment
+pip install -r requirements.txt
 ./setup.sh
 ```
 
-**Note**: The setup script clones the base packages. The other packages need to be cloned manually.
+This script clones the base packages and installs the dependencies. Currently, the following packages are cloned:
+
+- [smarty_utils](https://github.com/DHBW-Smart-Rollerz/smarty_utils)
+- [camera_preprocessing](https://github.com/DHBW-Smart-Rollerz/camera_preprocessing)
+
+Furthermore, the pre-commit hooks are installed. More about the pre-commit hooks can be found [here](https://pre-commit.com/).
+
+### 2. Setup VSCode
+
+1. Install the recommended extensions:
+
+  ```bash
+  cd <path/to/smarty_workspace>
+  ./scripts/install_extensions.sh
+  ```
+
+2. Open the workspace in VSCode and check if the extensions are installed.
+3. If the extensions are not installed, install them manually:
+   1. Open the extensions tab in VSCode
+   2. Search for `@recommended` and install all workspace recommendations
+   3. Reload the workspace
+   4. Check if the extensions are installed
 
 ## Usage
 
-Open the folder in VSCode and start developing.
+Open the folder in VSCode and start developing. The workspace is configured to use the pre-commit hooks. This means that the code is checked before committing. If the code is not compliant with the rules, the commit is rejected and the files are changed accordingly. We use the following pre-commit hooks:
 
-**Note**: Only VSCode is supported for now, but feel free to add support for other IDEs.
+- `black`: Code formatter for python to have a consistent code style
+- `flake8`: Linter for python to check the code for errors and style
+- `pep257`: Linter for python to check the docstrings (we use the pydocstyle formatter)
+- `isort`: Import sorter for python to have a consistent import order
+- `check-yaml`: Linter for yaml files to check the syntax
+- `end-of-file-fixer`: Linter to check if the files end with a newline
+- `trailing-whitespace`: Linter to check for trailing whitespaces
+
+To run the pre-commit hooks manually, use the following command:
+
+```bash
+pre-commit run --all-files
+```
+
+To run the tests, use the following command:
+
+```bash
+./scripts/test.sh
+```
+
+To build the workspace, use the following command:
+
+```bash
+./scripts/build.sh
+```
+
+To install the dependencies, use the following command:
+
+```bash
+./scripts/install_dependencies.sh
+```
+
+To run the setup script again, use the following command:
+
+```bash
+./setup.sh -f # Force the copy of the .pre-commit-config.yaml file
+```
 
 ## Contributing
 
