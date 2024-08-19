@@ -1,0 +1,13 @@
+# ROS2 Workspace
+/build/
+/install/
+/log/
+/ros2_ws.rosinstall
+/colcon.meta
+/colcon_build/
+/colcon_logs/
+/src/**
+/bags/
+
+/.pytest_cache/
+/.pytest_history/

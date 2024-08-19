@@ -1,0 +1,43 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+      {
+        "label": "colcon: build",
+        "type": "shell",
+        "command": [
+          "./scripts/build.sh"
+        ],
+        "options": {
+          "cwd": "${workspaceFolder}"
+        },
+      },
+      {
+        "label": "colcon: clean",
+        "type": "shell",
+        "command": ["rm -rf build/ install/ log/;"],
+        "options": {
+          "cwd": "${workspaceFolder}"
+        },
+      },
+      {
+        "label": "colcon: test",
+        "type": "shell",
+        "command": [
+          "./scripts/test.sh"
+        ],
+        "options": {
+          "cwd": "${workspaceFolder}"
+        },
+      },
+      {
+        "label": "Install Ros Dependiencies",
+        "type": "shell",
+        "command": [
+          "./scripts/install_dependencies.sh"
+        ],
+        "options": {
+          "cwd": "${workspaceFolder}"
+        },
+      }
+    ]
+  }

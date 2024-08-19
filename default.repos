@@ -1,0 +1,11 @@
+# List of repositories to use within your workspace
+# See https://github.com/dirk-thomas/vcstool
+repositories:
+  smarty_utils:
+    type: git
+    url: https://github.com/DHBW-Smart-Rollerz/smarty_utils.git
+    version: jazzy
+  camera_preprocessing:
+    type: git
+    url: https://github.com/DHBW-Smart-Rollerz/camera_preprocessing.git
+    version: jazzy
