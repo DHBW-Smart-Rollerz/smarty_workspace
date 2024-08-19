@@ -28,7 +28,7 @@ jobs:
         export ROS_DISTRO=jazzy
         apt install -y python3.12-venv
         python3 -m venv venv
-        source venv/bin/activate
+        . venv/bin/activate
         ./setup.sh
         ./scripts/install_dependencies.sh
         ./scripts/build.sh
