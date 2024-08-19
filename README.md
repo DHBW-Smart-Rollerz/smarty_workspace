@@ -1,5 +1,7 @@
 # Smarty Workspace
 
+  [![Build Test](https://github.com/DHBW-Smart-Rollerz/smarty_workspace/actions/workflows/build-test.yaml/badge.svg)](https://github.com/DHBW-Smart-Rollerz/smarty_workspace/actions/workflows/build-test.yaml)
+
 This is the basic ros2 workspace for the Smarty project. It contains useful setups and configurations for the project.
 
 ## Files
