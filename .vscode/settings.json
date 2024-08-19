@@ -1,10 +1,4 @@
 {
-    "python.analysis.extraPaths": [
-        "/opt/ros/galactic/lib/python3.8/site-packages",
-        "./smarty_utils/timing",
-        "./camera_preprocessing",
-        "./src/**"
-    ],
     "editor.formatOnSave": true,
     "[python]": {
     "editor.formatOnType": true,
@@ -18,13 +12,6 @@
       "tab.activeBorder": "#ffffff",
       "tab.activeBackground": "#373737"
 },
-"python.autoComplete.extraPaths": [
-    "/home/tom/smarty/build/timing",
-    "/home/tom/smarty/build/ros2_example_package",
-    "/home/tom/smarty/build/camera_preprocessing",
-    "/home/tom/smarty/install/lib/python3.12/site-packages",
-    "/opt/ros/jazzy/lib/python3.12/site-packages"
-],
 "ament-task-provider.envSetup": "source /opt/ros/jazzy/setup.bash",
 "taskExplorer.enabledTasks": {
     "tsc": false,
