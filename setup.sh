@@ -47,7 +47,7 @@ echo "Setting up pre-commit hooks"
 # Set up pre-commit-config.yaml for all repositories
 CONFIG_FILE="$WORKSPACE_DIR/.pre-commit-config.yaml"
 
-pip install pre-commit
+pip install -r $WORKSPACE_DIR/requirements.txt
 
 # Iterate over each repository in the workspace
 for repo in $(find "$WORKSPACE_DIR" -maxdepth 3 -name ".git" | xargs -n1 dirname); do
