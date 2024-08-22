@@ -12,6 +12,9 @@ RUN apt-get update && apt-get install -y \
 # Set the working directory
 WORKDIR /workspace
 
+# Copy the entire GitHub workspace into the Docker container
+COPY . /workspace
+
 # Copy entrypoint script
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
