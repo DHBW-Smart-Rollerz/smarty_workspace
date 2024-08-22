@@ -37,7 +37,7 @@ jobs:
             echo "No dependencies.repos file found"
         else
             echo "Cloning dependencies defined in $repos_file"
-            vcs import < "$repos_file" ros2_ws/src
+            vcs import < "$repos_file" /ros2_ws/src
         fi
 
         python3 -m venv .venv
