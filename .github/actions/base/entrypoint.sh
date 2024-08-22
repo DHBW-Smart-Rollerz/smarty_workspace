@@ -3,8 +3,8 @@
 set -e
 
 # Setup workspace
-mkdir -p ros2_ws/src
-cp -r workspace/* ros2_ws/src/
+mkdir -p ros2_ws/src/workingdir
+cp -r $GITHUB_WORKSPACE/* ros2_ws/src/workingdir
 
 # Clone dependencies
 vcs import ros2_ws/src < $(find workspace/* -maxdepth 2 -name dependencies.repos)
