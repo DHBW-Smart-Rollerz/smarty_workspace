@@ -49,6 +49,12 @@ CONFIG_FILE="$WORKSPACE_DIR/.pre-commit-config.yaml"
 
 pip install -r $WORKSPACE_DIR/requirements.txt
 
+# Find requirements.txt files in the src directory
+for req_file in $(find "$WORKSPACE_DIR/src" -name "requirements.txt" -maxdepth 3); do
+    echo "Installing requirements in $req_file"
+    pip install -r "$req_file"
+done
+
 # Iterate over each repository in the workspace
 for repo in $(find "$WORKSPACE_DIR" -maxdepth 3 -name ".git" | xargs -n1 dirname); do
     echo "Setting up .pre-commit-config.yaml in $repo"
