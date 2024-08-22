@@ -7,7 +7,8 @@ mkdir -p ros2_ws/src/workingdir
 # cp -r $GITHUB_WORKSPACE ros2_ws/src/workingdir
 
 # Clone dependencies
-vcs import ros2_ws/src < $(find * -maxdepth 2 -name dependencies.repos)
+repos_file=$(find * -maxdepth 2 -name dependencies.repos)
+vcs import ros2_ws/src < "$repos_file
 
 # Setup virtual environment
 python3 -m venv .venv
