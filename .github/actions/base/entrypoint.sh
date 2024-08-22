@@ -3,9 +3,8 @@
 set -e
 
 # Setup workspace
-cd /workspace
-mkdir -p ros2_ws/src/
-# cp -r $GITHUB_WORKSPACE ros2_ws/src/workingdir
+mkdir -p /ros2_ws/src/my_package
+cp -r /workspace/* /ros2_ws/src/my_package
 
 # Clone dependencies
 repos_file=$(find * -maxdepth 2 -name dependencies.repos)
@@ -23,9 +22,9 @@ source .venv/bin/activate
 ls -R /workspace
 
 # Install Python dependencies
-find ros2_ws/src/* -maxdepth 3 -name requirements.txt -exec pip install -r {} \;
+find /ros2_ws/src/* -maxdepth 3 -name requirements.txt -exec pip install -r {} \;
 
 # Build the workspace
-cd ros2_ws
+cd /ros2_ws
 ls -la src
 colcon build --symlink-install --event-handlers console_direct+

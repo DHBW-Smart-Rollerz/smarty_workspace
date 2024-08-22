@@ -5,8 +5,13 @@ inputs:
     description: 'ROS 2 distribution to use'
     required: true
     default: 'jazzy'
+  docker_image:
+    description: 'Docker image to use'
+    required: true
+    default: 'smarty-base:$ros_distro'
 runs:
   using: 'docker'
   image: 'Dockerfile'
   args:
     - ${{ inputs.ros_distro }}
+    - 'docker run --rm -v ${{ github.workspace }}:/workflow ${{ inputs.docker_image }}'
