@@ -3,7 +3,7 @@
 set -e
 
 # Setup workspace
-# mkdir -p ros2_ws/src/workingdir
+mkdir -p ros2_ws/src/workingdir
 # cp -r $GITHUB_WORKSPACE ros2_ws/src/workingdir
 
 # Clone dependencies
