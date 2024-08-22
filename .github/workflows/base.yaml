@@ -34,15 +34,23 @@ jobs:
         python3 -m venv .venv
         . .venv/bin/activate
 
-        cd /ros2_ws/src/
-        repos_file=$(find * -maxdepth 2 -name dependencies.repos)
-        if [ -z "$repos_file" ]; then
-            echo "No dependencies.repos file found"
+        # Find all dependencies.repos files within the src directory
+        cd /ros2_ws
+        repos_files=$(find src -type f -name "dependencies.repos")
+
+        # Check if any dependencies.repos files were found
+        if [ -z "$repos_files" ]; then
+            echo "No dependencies.repos files found in $BASE_DIR."
         else
-            echo "Cloning dependencies defined in $repos_file"
-            vcs import < "$repos_file"
+            echo "Found dependencies.repos files:"
+            echo "$repos_files"
         fi
 
+        # Iterate over each found dependencies.repos file and install dependencies
+        for repos_file in $repos_files; do
+            echo "Installing dependencies from $repos_file"
+            vcs import < "$repos_file"
+        done
 
         find /ros2_ws/src/* -maxdepth 3 -name requirements.txt -exec pip install -r {} \;
 
