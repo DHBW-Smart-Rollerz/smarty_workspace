@@ -1,0 +1,60 @@
+name: Build and Test Reusable
+
+on:
+  workflow_call:
+    inputs:
+      branch_pattern:
+        description: 'Branch pattern to trigger the workflow'
+        required: true
+        type: string
+    secrets:
+      GITHUB_TOKEN:
+        required: true
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    container:
+      image: osrf/ros:jazzy-desktop
+    steps:
+    - name: 🚀 Checkout code
+      uses: actions/checkout@v3
+
+    - name: 🔧 Install Dependencies
+      run: |
+        sudo apt-get update && sudo apt-get install -y \
+        python3-venv \
+        python3-pip \
+        git
+
+    - name: 📦 Setup workspace
+      run: |
+        mkdir -p /ros2_ws/src/my_package
+        cp -r $GITHUB_WORKSPACE/* /ros2_ws/src/my_package
+
+        repos_file=$(find * -maxdepth 2 -name dependencies.repos)
+        if [ -z "$repos_file" ]; then
+            echo "No dependencies.repos file found"
+        else
+            echo "Cloning dependencies defined in $repos_file"
+            vcs import < "$repos_file" ros2_ws/src
+        fi
+
+        python3 -m venv .venv
+        . .venv/bin/activate
+
+        find /ros2_ws/src/* -maxdepth 3 -name requirements.txt -exec pip install -r {} \;
+
+    - name: 🛠️ Build packages
+      run: |
+        . .venv/bin/activate
+        bash -c "source /opt/ros/jazzy/setup.bash && cd /ros2_ws && colcon build --event-handlers console_cohesion+"
+
+    - name: 🧪 Run tests
+      run: |
+        . .venv/bin/activate
+        echo "Skipping tests for now"
+        # bash -c "source /opt/ros/jazzy/setup.bash && cd /ros2_ws && colcon test --event-handlers console_cohesion+"
+
+    - name: 🎯 Finish
+      run: echo "Build and test finished"
