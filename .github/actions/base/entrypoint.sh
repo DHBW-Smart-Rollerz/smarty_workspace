@@ -24,5 +24,5 @@ find ros2_ws/src/* -maxdepth 3 -name requirements.txt -exec pip install -r {} \;
 
 # Build the workspace
 cd ros2_ws
-ls -la
+ls -la src
 colcon build --symlink-install --event-handlers console_direct+
