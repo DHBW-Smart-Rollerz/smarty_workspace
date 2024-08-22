@@ -49,7 +49,7 @@ jobs:
         # Iterate over each found dependencies.repos file and install dependencies
         for repos_file in $repos_files; do
             echo "Installing dependencies from $repos_file"
-            vcs import < "$repos_file"
+            vcs import < "$repos_file" src/
         done
 
         find src/* -maxdepth 3 -name requirements.txt -exec pip install -r {} \;
