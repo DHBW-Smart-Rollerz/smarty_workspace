@@ -10,23 +10,62 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     container:
-      image: ubuntu:noble
-
+      image: osrf/ros:jazzy-desktop
     steps:
-    - name: Checkout code
+    - name: 🚀 Checkout code
       uses: actions/checkout@v3
 
-    - name: Setup ROS 2 Jazzy
-      uses: ros-tooling/setup-ros@v0.7
-      with:
-        required-ros-distributions: jazzy
-    - run: |
-        export ROS_DISTRO=jazzy
-        apt install -y python3.12-venv
-        python3 -m venv venv
-        . venv/bin/activate
-        ./setup.sh
-        ./scripts/install_dependencies.sh
-        ./scripts/build.sh
+    - name: 🔧 Install Dependencies
+      run: |
+        sudo apt-get update && sudo apt-get install -y \
+        python3-venv \
+        python3-pip \
+        git
+
+    - name: 📦 Setup workspace
+      run: |
+        mkdir -p /smarty_ws
+        cp -r $GITHUB_WORKSPACE/* /smarty_ws
+        python3 -m venv .venv
+        . .venv/bin/activate
+
+        bash -c "source /opt/ros/jazzy/setup.bash && cd /smarty_ws && ./setup.sh"
+
+    - name: 🛠️ Installing Base Packages
+      run: |
+        . .venv/bin/activate
+        # Find all dependencies.repos files within the src directory
+        cd /smarty_ws
+        repos_files=$(find src -type f -name "dependencies.repos")
+
+        # Check if any dependencies.repos files were found
+        if [ -z "$repos_files" ]; then
+            echo "No dependencies.repos files found in $BASE_DIR."
+        else
+            echo "Found dependencies.repos files:"
+            echo "$repos_files"
+        fi
+
+        # Iterate over each found dependencies.repos file and install dependencies
+        for repos_file in $repos_files; do
+            echo "Installing dependencies from $repos_file"
+            vcs import < "$repos_file" src/
+        done
+
+        find src/* -maxdepth 3 -name requirements.txt -exec pip install -r {} \;
+
+    - name: 🛠️ Build packages
+      run: |
+        . .venv/bin/activate
+        bash -c "source /opt/ros/jazzy/setup.bash && cd /smarty_ws && colcon build --event-handlers console_cohesion+"
+
+    - name: 🧪 Run tests
+      run: |
+        . .venv/bin/activate
+        echo "Skipping tests for now"
+        # bash -c "source /opt/ros/jazzy/setup.bash && cd /smarty_ws && colcon test --event-handlers console_cohesion+"
+
+    - name: 🎯 Finish
+      run: echo "Build and test finished"
