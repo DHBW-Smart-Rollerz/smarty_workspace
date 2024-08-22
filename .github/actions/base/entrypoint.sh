@@ -8,6 +8,7 @@ mkdir -p ros2_ws/src/workingdir
 
 # Clone dependencies
 repos_file=$(find * -maxdepth 2 -name dependencies.repos)
+echo "Cloning dependencies defined in $repos_file"
 vcs import < "$repos_file" ros2_ws/src
 
 # Setup virtual environment
