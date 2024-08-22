@@ -5,7 +5,7 @@ set -e
 # Setup workspace
 mkdir -p /ros2_ws/src/my_package
 
-ls -R /
+ls -R /workspace
 
 cp -r /workspace/* /ros2_ws/src/my_package
 
