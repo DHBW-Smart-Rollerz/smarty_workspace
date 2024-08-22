@@ -8,8 +8,12 @@ mkdir -p ros2_ws/src/workingdir
 
 # Clone dependencies
 repos_file=$(find * -maxdepth 2 -name dependencies.repos)
-echo "Cloning dependencies defined in $repos_file"
-vcs import < "$repos_file" ros2_ws/src
+if [ -z "$repos_file" ]; then
+    echo "No dependencies.repos file found"
+else
+    echo "Cloning dependencies defined in $repos_file"
+    vcs import < "$repos_file" ros2_ws/src
+fi
 
 # Setup virtual environment
 python3 -m venv .venv
