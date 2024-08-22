@@ -52,7 +52,7 @@ jobs:
             vcs import < "$repos_file"
         done
 
-        find /ros2_ws/src/* -maxdepth 3 -name requirements.txt -exec pip install -r {} \;
+        find src/* -maxdepth 3 -name requirements.txt -exec pip install -r {} \;
 
     - name: 🛠️ Build packages
       run: |
