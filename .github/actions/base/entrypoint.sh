@@ -20,6 +20,8 @@ fi
 python3 -m venv .venv
 source .venv/bin/activate
 
+ll -la
+
 # Install Python dependencies
 find ros2_ws/src/* -maxdepth 3 -name requirements.txt -exec pip install -r {} \;
 
