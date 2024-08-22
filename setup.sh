@@ -54,10 +54,10 @@ for repo in $(find "$WORKSPACE_DIR" -maxdepth 3 -name ".git" | xargs -n1 dirname
     echo "Setting up .pre-commit-config.yaml in $repo"
     if [ ! -f "$repo/.pre-commit-config.yaml" ]; then
         cp "$CONFIG_FILE" "$repo/.pre-commit-config.yaml"
-    # elif [ "$1" == "-f" ] && ["$repo" != "$WORKSPACE_DIR"]; then
-    #     echo "Forcing update of .pre-commit-config.yaml in $repo"
-    #     rm -f "$repo/.pre-commit-config.yaml"
-    #     cp "$CONFIG_FILE" "$repo/.pre-commit-config.yaml"
+    elif [ "$1" == "-f" ] && [ "$WORKSPACE_DIR" != "$repo" ]; then
+        echo "Forcing update of .pre-commit-config.yaml in $repo"
+        # rm -f "$repo/.pre-commit-config.yaml"
+        cp "$CONFIG_FILE" "$repo/.pre-commit-config.yaml" -f
     fi
 
     cd "$repo"
