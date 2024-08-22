@@ -4,6 +4,9 @@ set -e
 
 # Setup workspace
 mkdir -p /ros2_ws/src/my_package
+
+ls -R /
+
 cp -r /workspace/* /ros2_ws/src/my_package
 
 # Clone dependencies
