@@ -15,3 +15,6 @@ update_precommit:
 install_python:
 	# Install depndencies by finding all requirements.txt files
 	find . -type f -name requirements.txt -exec sh -c 'pip install -r "$$1"' _ {} \;
+
+install_extensions:
+	./scripts/install_recomended_extensions.sh

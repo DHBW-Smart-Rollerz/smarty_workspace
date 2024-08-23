@@ -22,12 +22,14 @@ jobs:
         sudo apt-get update && sudo apt-get install -y \
         python3-venv \
         python3-pip \
-        git
+        git \
+        jq
 
     - name: 📦 Setup workspace
       run: |
-        mkdir -p /smarty_ws
-        cp -r $GITHUB_WORKSPACE/* /smarty_ws
+        mkdir -p /smarty_ws/.vscode
+        cp -r $GITHUB_WORKSPACE/** /smarty_ws
+        bash -c "shopt -s globstar dotglob && cp -r $GITHUB_WORKSPACE/.vscode/* /smarty_ws/.vscode/"
         python3 -m venv .venv
         . .venv/bin/activate
 

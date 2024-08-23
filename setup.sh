@@ -71,8 +71,7 @@ for repo in $(find "$WORKSPACE_DIR" -maxdepth 3 -name ".git" | xargs -n1 dirname
     pre-commit install -f --install-hooks
 done
 
-echo "Setting up VS Code recommended extensions"
-./scripts/install_recomended_extensions.sh
+make -C $WORKSPACE_DIR install_extensions
 
 echo "Pre-commit hooks set up successfully"
-echo "Please restart your terminal to apply the changes"
+echo "Please restart your terminal to apply the changes and run ./scripts/install_recomended_extensions.sh to install all vscode extensions"
