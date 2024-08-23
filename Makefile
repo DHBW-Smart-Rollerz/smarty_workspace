@@ -11,3 +11,7 @@ setup:
 
 update_precommit:
 	find . -type d -name .git -exec sh -c 'if [ "$$(dirname "$$1")" != "." ]; then echo "Replacing in dir: $$(dirname "$$1")" && cp -f .pre-commit-config.yaml "$$(dirname "$$1")"; fi' _ {} \;
+
+install_python:
+	# Install depndencies by finding all requirements.txt files
+	find . -type f -name requirements.txt -exec sh -c 'pip install -r "$$1"' _ {} \;
