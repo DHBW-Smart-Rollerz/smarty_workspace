@@ -7,6 +7,10 @@ on:
         description: 'Branch pattern to trigger the workflow'
         required: true
         type: string
+      type:
+        description: 'Type of code to build [python, cpp]'
+        default: 'python'
+        type: string
 
 jobs:
   build-and-test:
@@ -54,13 +58,32 @@ jobs:
     - name: 🛠️ Build packages
       run: |
         . .venv/bin/activate
-        bash -c "source /opt/ros/jazzy/setup.bash && cd /ros2_ws && colcon build --event-handlers console_cohesion+"
+        if [ ${{ github.event.inputs.type }} == "python" ]; then
+            echo "Building Python code"
+            bash -c "source /opt/ros/jazzy/setup.bash && cd /ros2_ws && colcon build --event-handlers console_cohesion+"
+        elif [ ${{ github.event.inputs.type }} == "cpp" ]; then
+            echo "Building Cpp code"
+            bash -c "source /opt/ros/jazzy/setup.bash && cd /ros2_ws && colcon build --symlink-install --cmake-args -BUILD_TESTING=ON console_cohesion+"
+        else
+            echo "Invalid type provided"
+            exit 1
+        fi
 
     - name: 🧪 Run tests
       run: |
         . .venv/bin/activate
-        echo "Skipping tests for now"
-        # bash -c "source /opt/ros/jazzy/setup.bash && cd /ros2_ws && colcon test --event-handlers console_cohesion+"
+
+        if [ ${{ github.event.inputs.type }} == "python" ]; then
+            echo "Skipping tests for now"
+            # bash -c "source /opt/ros/jazzy/setup.bash && cd /ros2_ws && colcon test --event-handlers console_cohesion+"
+        elif [ ${{ github.event.inputs.type }} == "cpp" ]; then
+            echo "Testing Cpp code"
+            bash -c "source /opt/ros/jazzy/setup.bash && cd /ros2_ws && colcon test --packages-select my_package --event-handlers console_cohesion+"
+            bash -c "source /opt/ros/jazzy/setup.bash && cd /ros2_ws && colcon test-result --all"
+        else
+            echo "Invalid type provided"
+            exit 1
+        fi
 
     - name: 🎯 Finish
       run: echo "Build and test finished"

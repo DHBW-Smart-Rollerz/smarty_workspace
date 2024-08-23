@@ -1,21 +1,23 @@
 {
     "configurations": [
-      {
-        "browse": {
-          "databaseFilename": "${default}",
-          "limitSymbolsToIncludedHeaders": false
-        },
-        "includePath": [
-          "/opt/ros/jazzy/include/**",
-          "/usr/include/**",
-          "add here your project include files"
-        ],
-        "name": "ROS",
-        "intelliSenseMode": "gcc-x64",
-        "compilerPath": "/usr/bin/gcc",
-        "cStandard": "gnu11",
-        "cppStandard": "c++17"
-      }
+        {
+            "browse": {
+                "databaseFilename": "${default}",
+                "limitSymbolsToIncludedHeaders": false
+            },
+            "includePath": [
+                "/opt/ros/jazzy/include/**",
+                "/usr/include/**",
+                "/home/${USER}/smarty_workspace/install/**",
+                "/home/${USER}/smarty_workspace/src/**",
+                "${workspaceFolder}/src/controllers/include"
+            ],
+            "name": "ROS",
+            "intelliSenseMode": "gcc-x64",
+            "compilerPath": "/usr/bin/gcc",
+            "cStandard": "gnu11",
+            "cppStandard": "c++17"
+        }
     ],
     "version": 4
-  }
+}
