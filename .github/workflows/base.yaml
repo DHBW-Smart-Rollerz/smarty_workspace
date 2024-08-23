@@ -32,7 +32,8 @@ jobs:
         sudo apt-get update && sudo apt-get install -y \
         python3-venv \
         python3-pip \
-        ros-dev-tools
+        catkin-tools \
+        python3-colcon-common-extensions \
         git
 
     - name: 📦 Setup workspace
