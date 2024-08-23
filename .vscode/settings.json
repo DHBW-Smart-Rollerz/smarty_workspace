@@ -50,7 +50,7 @@
 "[C_Cpp]": {
     "editor.formatOnType": true,
     "editor.formatOnSave": true,
-    "editor.defaultFormatter": "zachflower.uncrustify",
+    "editor.defaultFormatter": "ms-vscode.cpptools",
     "editor.tabSize": 4,
 },
 "[cpp]": {
@@ -59,7 +59,7 @@
     "editor.formatOnSave": true,
   },
 "[c]": {
-    "editor.defaultFormatter": "zachflower.uncrustify",
+    "editor.defaultFormatter": "ms-vscode.cpptools",
     "editor.formatOnType": true,
     "editor.formatOnSave": true,
   },
