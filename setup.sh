@@ -38,7 +38,7 @@ if [ ! -d "$WORKSPACE_DIR/src" ]; then
 fi
 
 sudo apt update
-sudo rosdep init
+sudo rosdep init || echo "rosdep is already initilized. The above error can be ignored."
 rosdep update --rosdistro=$ROS_DISTRO
 rosdep install --from-paths src --ignore-src -y --rosdistro=$ROS_DISTRO
 
