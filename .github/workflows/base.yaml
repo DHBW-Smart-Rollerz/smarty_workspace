@@ -74,10 +74,10 @@ jobs:
         . .venv/bin/activate
         if [ "${{ inputs.type }}" = "python" ]; then
             echo "Building Python code"
-            bash -c "source /opt/ros/jazzy/setup.bash && cd /ros2_ws && colcon build --event-handlers console_cohesion+"
+            bash -c "source /opt/ros/jazzy/setup.bash && cd /ros2_ws && colcon build --cmake-args -G "Unix Makefiles" --event-handlers console_cohesion+"
         elif [ "${{ inputs.type }}" = "cpp" ]; then
             echo "Building Cpp code"
-            bash -c "source /opt/ros/jazzy/setup.bash && cd /ros2_ws && colcon build --symlink-install --cmake-args -BUILD_TESTING=ON --event-handlers console_cohesion+"
+            bash -c "source /opt/ros/jazzy/setup.bash && cd /ros2_ws && colcon build --symlink-install --cmake-args -G "Unix Makefiles" -DBUILD_TESTING=ON --event-handlers console_cohesion+"
         else
             echo "Invalid type provided"
             exit 1
