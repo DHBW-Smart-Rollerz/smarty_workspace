@@ -65,10 +65,10 @@ jobs:
     - name: 🛠️ Build packages
       run: |
         . .venv/bin/activate
-        if [ ${{ inputs.type }} == "python" ]; then
+        if [ "${{ inputs.type }}" == "python" ]; then
             echo "Building Python code"
             bash -c "source /opt/ros/jazzy/setup.bash && cd /ros2_ws && colcon build --event-handlers console_cohesion+"
-        elif [ ${{ github.event.inputs.type }} == "cpp" ]; then
+        elif [ "${{ inputs.type }}" == "cpp" ]; then
             echo "Building Cpp code"
             bash -c "source /opt/ros/jazzy/setup.bash && cd /ros2_ws && colcon build --symlink-install --cmake-args -BUILD_TESTING=ON console_cohesion+"
         else
@@ -80,10 +80,10 @@ jobs:
       run: |
         . .venv/bin/activate
 
-        if [ ${{ inputs.type }} == "python" ]; then
+        if [ "${{ inputs.type }}" == "python" ]; then
             echo "Skipping tests for now"
             # bash -c "source /opt/ros/jazzy/setup.bash && cd /ros2_ws && colcon test --event-handlers console_cohesion+"
-        elif [ ${{ inputs.type }} == "cpp" ]; then
+        elif [ "${{ inputs.type }}" == "cpp" ]; then
             echo "Testing Cpp code"
             bash -c "source /opt/ros/jazzy/setup.bash && cd /ros2_ws && colcon test --packages-select my_package --event-handlers console_cohesion+"
             bash -c "source /opt/ros/jazzy/setup.bash && cd /ros2_ws && colcon test-result --all"
