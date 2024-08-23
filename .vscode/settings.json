@@ -54,7 +54,7 @@
     "editor.tabSize": 4,
 },
 "[cpp]": {
-    "editor.defaultFormatter": "ms-vscode.cpptools",
+    "editor.defaultFormatter": "ms-iot.vscode-ros",
     "editor.formatOnType": true,
     "editor.formatOnSave": true,
   },
