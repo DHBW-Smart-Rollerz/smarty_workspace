@@ -12,6 +12,11 @@ on:
         default: 'python'
         required: true
         type: string
+      package_name:
+        description: 'Name of the package to build'
+        required: true
+        default: 'my_package'
+        type: string
 
 jobs:
   build-and-test:
@@ -32,8 +37,8 @@ jobs:
 
     - name: 📦 Setup workspace
       run: |
-        mkdir -p /ros2_ws/src/my_package
-        cp -r $GITHUB_WORKSPACE/* /ros2_ws/src/my_package
+        mkdir -p /ros2_ws/src/${{ inputs.package_name}}
+        cp -r $GITHUB_WORKSPACE/* /ros2_ws/src/${{ inputs.package_name}}
         python3 -m venv .venv
         . .venv/bin/activate
 
@@ -86,7 +91,7 @@ jobs:
             # bash -c "source /opt/ros/jazzy/setup.bash && cd /ros2_ws && colcon test --event-handlers console_cohesion+"
         elif [ "${{ inputs.type }}" = "cpp" ]; then
             echo "Testing Cpp code"
-            bash -c "source /opt/ros/jazzy/setup.bash && cd /ros2_ws && colcon test --packages-select my_package --event-handlers console_cohesion+"
+            bash -c "source /opt/ros/jazzy/setup.bash && cd /ros2_ws && colcon test --packages-select ${{inputs.package_name}} --event-handlers console_cohesion+"
             bash -c "source /opt/ros/jazzy/setup.bash && cd /ros2_ws && colcon test-result --all"
         else
             echo "Invalid type provided"
