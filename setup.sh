@@ -37,7 +37,8 @@ if [ ! -d "$WORKSPACE_DIR/src" ]; then
     vcs import < default.repos "$WORKSPACE_DIR/src"
 fi
 
-sudo apt-get update
+sudo apt update
+sudo rosdep init
 rosdep update --rosdistro=$ROS_DISTRO
 rosdep install --from-paths src --ignore-src -y --rosdistro=$ROS_DISTRO
 
