@@ -42,6 +42,7 @@ jobs:
         cp -r $GITHUB_WORKSPACE/* /ros2_ws/src/${{ inputs.package_name}}
         python3 -m venv .venv
         . .venv/bin/activate
+        sudo apt install -y ros-dev-tools
 
         pip install setuptools==73.0.1 \
         empy==3.3.4 \
