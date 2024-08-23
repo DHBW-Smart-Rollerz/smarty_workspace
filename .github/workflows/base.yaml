@@ -12,6 +12,11 @@ on:
         default: 'python'
         required: true
         type: string
+      package_name:
+        description: 'Name of the package to build'
+        required: true
+        default: 'my_package'
+        type: string
 
 jobs:
   build-and-test:
@@ -27,15 +32,17 @@ jobs:
         sudo apt-get update && sudo apt-get install -y \
         python3-venv \
         python3-pip \
-        ros-dev-tools
+        catkin-tools \
+        python3-colcon-common-extensions \
         git
 
     - name: 📦 Setup workspace
       run: |
-        mkdir -p /ros2_ws/src/my_package
-        cp -r $GITHUB_WORKSPACE/* /ros2_ws/src/my_package
+        mkdir -p /ros2_ws/src/${{ inputs.package_name}}
+        cp -r $GITHUB_WORKSPACE/* /ros2_ws/src/${{ inputs.package_name}}
         python3 -m venv .venv
         . .venv/bin/activate
+        sudo apt install -y ros-dev-tools build-essential cmake make
 
         pip install setuptools==73.0.1 \
         empy==3.3.4 \
@@ -71,7 +78,7 @@ jobs:
             bash -c "source /opt/ros/jazzy/setup.bash && cd /ros2_ws && colcon build --event-handlers console_cohesion+"
         elif [ "${{ inputs.type }}" = "cpp" ]; then
             echo "Building Cpp code"
-            bash -c "source /opt/ros/jazzy/setup.bash && cd /ros2_ws && colcon build --symlink-install --cmake-args -BUILD_TESTING=ON console_cohesion+"
+            bash -c "source /opt/ros/jazzy/setup.bash && cd /ros2_ws && colcon build --cmake-args -DBUILD_TESTING=ON --event-handlers console_cohesion+"
         else
             echo "Invalid type provided"
             exit 1
@@ -86,7 +93,7 @@ jobs:
             # bash -c "source /opt/ros/jazzy/setup.bash && cd /ros2_ws && colcon test --event-handlers console_cohesion+"
         elif [ "${{ inputs.type }}" = "cpp" ]; then
             echo "Testing Cpp code"
-            bash -c "source /opt/ros/jazzy/setup.bash && cd /ros2_ws && colcon test --packages-select my_package --event-handlers console_cohesion+"
+            bash -c "source /opt/ros/jazzy/setup.bash && cd /ros2_ws && colcon test --packages-select ${{inputs.package_name}} --event-handlers console_cohesion+"
             bash -c "source /opt/ros/jazzy/setup.bash && cd /ros2_ws && colcon test-result --all"
         else
             echo "Invalid type provided"
