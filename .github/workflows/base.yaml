@@ -27,11 +27,6 @@ jobs:
         sudo apt-get update && sudo apt-get install -y \
         python3-venv \
         python3-pip \
-        setuptools==73.0.1 \
-        empy==3.3.4 \
-        lark-parser \
-        catkin_pkg \
-        numpy \
         git
 
     - name: 📦 Setup workspace
@@ -40,6 +35,12 @@ jobs:
         cp -r $GITHUB_WORKSPACE/* /ros2_ws/src/my_package
         python3 -m venv .venv
         . .venv/bin/activate
+
+        pip install setuptools==73.0.1 \
+        empy==3.3.4 \
+        lark-parser \
+        catkin_pkg \
+        numpy \
 
         # Find all dependencies.repos files within the src directory
         cd /ros2_ws
