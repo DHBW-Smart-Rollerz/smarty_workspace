@@ -1,10 +1,13 @@
-.PHONY: clean build setup update_precommit
+.PHONY: clean build setup update_precommit install_python install_extensions
 
 clean:
 	rm -rf build/ install/ log/;
 
 build:
-	./scripts/build.sh
+	./scripts/build.sh $(PKG)
+
+test:
+	./scripts/test.sh
 
 setup:
 	./setup.sh
