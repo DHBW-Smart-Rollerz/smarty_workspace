@@ -21,3 +21,16 @@ install_python:
 
 install_extensions:
 	./scripts/install_recomended_extensions.sh
+
+filter_dependencies:
+	@if [ -z "$(SUBDIR)" ]; then \
+		echo "Please provide a SUBDIR variable to filter dependencies"; \
+	else \
+		if [ -f "src/$(SUBDIR)/requirements.txt" ]; then \
+			grep -v -E -f skip_dependencies.txt "src/$(SUBDIR)/requirements.txt" > "src/$(SUBDIR)/filtered_requirements.txt"; \
+			echo "Filtered requirements in src/$(SUBDIR)"; \
+			mv "src/$(SUBDIR)/filtered_requirements.txt" "src/$(SUBDIR)/requirements.txt"; \
+		else \
+			echo "No requirements.txt found in src/$(SUBDIR)"; \
+		fi \
+	fi
