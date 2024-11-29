@@ -58,7 +58,7 @@ Furthermore, the pre-commit hooks are installed. More about the pre-commit hooks
 
   ```bash
   cd <path/to/smarty_workspace>
-  ./scripts/install_extensions.sh
+  ./scripts/install_recommended_extensions.sh
   ```
 
 2. Open the workspace in VSCode and check if the extensions are installed.
