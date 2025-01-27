@@ -6,6 +6,9 @@ clean:
 build:
 	./scripts/build.sh $(PKG)
 
+rosdep:
+	./scripts/install_dependencies.sh
+
 test:
 	./scripts/test.sh
 
