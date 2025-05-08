@@ -1,21 +1,21 @@
 {
-    "editor.formatOnSave": true,
-    "[python]": {
+  "editor.formatOnSave": true,
+  "[python]": {
     "editor.formatOnType": true,
-    "editor.defaultFormatter": "ms-python.black-formatter",
-},
-"isort.args":["--profile", "black"],
-"python.defaultInterpreterPath": "python",
-"python.testing.pytestEnabled": true,
-"autoDocstring.docstringFormat": "pep257",
-"autoDocstring.startOnNewLine": true,
-"autoDocstring.generateDocstringOnEnter": true,
-"workbench.colorCus${USER}izations": {
-      "tab.activeBorder": "#ffffff",
-      "tab.activeBackground": "#373737"
-},
-"ament-task-provider.envSetup": "source /opt/ros/jazzy/setup.bash",
-"taskExplorer.enabledTasks": {
+    "editor.defaultFormatter": "ms-python.black-formatter"
+  },
+  "isort.args": ["--profile", "black"],
+  "python.defaultInterpreterPath": "python",
+  "python.testing.pytestEnabled": true,
+  "autoDocstring.docstringFormat": "pep257",
+  "autoDocstring.startOnNewLine": true,
+  "autoDocstring.generateDocstringOnEnter": true,
+  "workbench.colorCus${USER}izations": {
+    "tab.activeBorder": "#ffffff",
+    "tab.activeBackground": "#373737"
+  },
+  "ament-task-provider.envSetup": "source /opt/ros/jazzy/setup.bash",
+  "taskExplorer.enabledTasks": {
     "tsc": false,
     "ruby": false,
     "powershell": false,
@@ -28,48 +28,50 @@
     "gradle": false,
     "composer": false,
     "ant": false
-},
-"python.autoComplete.extraPaths": [
+  },
+  "python.autoComplete.extraPaths": [
     "/home/${USER}/smarty_workspace/build/timing",
     "/home/${USER}/smarty_workspace/build/ros2_example_package",
     "/home/${USER}/smarty_workspace/build/camera_preprocessing",
     "/home/${USER}/smarty_workspace/install/lib/python3.12/site-packages",
     "/opt/ros/jazzy/lib/python3.12/site-packages"
-],
-"python.analysis.extraPaths": [
+  ],
+  "python.analysis.extraPaths": [
     "/home/${USER}/smarty_workspace/build/timing",
     "/home/${USER}/smarty_workspace/build/ros2_example_package",
     "/home/${USER}/smarty_workspace/build/camera_preprocessing",
     "/home/${USER}/smarty_workspace/install/lib/python3.12/site-packages",
     "/opt/ros/jazzy/lib/python3.12/site-packages",
-    "./install/lane_msgs/lib/python3.12/site-packages"
-],
-"C_Cpp.autocompleteAddParentheses": true,
-"C_Cpp.clang_format_fallbackStyle": "Google",
-"C_Cpp.clang_format_sortIncludes": true,
-"C_Cpp.clang_format_style": "file",
-"[C_Cpp]": {
+    "./install/lane_msgs/lib/python3.12/site-packages",
+    "./src/state_machine",
+    "./src/smarty_utils/smarty_utils"
+  ],
+  "C_Cpp.autocompleteAddParentheses": true,
+  "C_Cpp.clang_format_fallbackStyle": "Google",
+  "C_Cpp.clang_format_sortIncludes": true,
+  "C_Cpp.clang_format_style": "file",
+  "[C_Cpp]": {
     "editor.formatOnType": true,
     "editor.formatOnSave": true,
     "editor.defaultFormatter": "ms-vscode.cpptools",
-    "editor.tabSize": 4,
-},
-"[cpp]": {
+    "editor.tabSize": 4
+  },
+  "[cpp]": {
     "editor.defaultFormatter": "ms-iot.vscode-ros",
     "editor.formatOnType": true,
-    "editor.formatOnSave": true,
+    "editor.formatOnSave": true
   },
-"[c]": {
+  "[c]": {
     "editor.defaultFormatter": "ms-vscode.cpptools",
     "editor.formatOnType": true,
-    "editor.formatOnSave": true,
+    "editor.formatOnSave": true
   },
-"[cmake]": {
+  "[cmake]": {
     "editor.quickSuggestions": {
-        "strings": true
+      "strings": true
     }
-},
-"files.associations": {
+  },
+  "files.associations": {
     "*.rmd": "markdown",
     "array": "cpp",
     "atomic": "cpp",
@@ -145,12 +147,12 @@
     "typeinfo": "cpp",
     "variant": "cpp",
     "any": "cpp"
-},
-// "C_Cpp.clang_format_path": ".clang-format",
-"clang-format.fallbackStyle": "Google",
-"clang-format.assumeFilename": ".clang-format",
-"uncrustify.configPath.linux": "/opt/ros/jazzy/lib/python3.12/site-packages/ament_uncrustify/configuration/ament_code_style_0_78.cfg",
-"uncrustify.useReplaceOption": true,
-"uncrustify.debug": true,
-"commentTranslate.hover.enabled": true,
+  },
+  // "C_Cpp.clang_format_path": ".clang-format",
+  "clang-format.fallbackStyle": "Google",
+  "clang-format.assumeFilename": ".clang-format",
+  "uncrustify.configPath.linux": "/opt/ros/jazzy/lib/python3.12/site-packages/ament_uncrustify/configuration/ament_code_style_0_78.cfg",
+  "uncrustify.useReplaceOption": true,
+  "uncrustify.debug": true,
+  "commentTranslate.hover.enabled": true
 }
