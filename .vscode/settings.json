@@ -4,7 +4,10 @@
     "editor.formatOnType": true,
     "editor.defaultFormatter": "ms-python.black-formatter"
   },
-  "isort.args": ["--profile", "black"],
+  "isort.args": [
+    "--profile",
+    "black"
+  ],
   "python.defaultInterpreterPath": "python",
   "python.testing.pytestEnabled": true,
   "autoDocstring.docstringFormat": "pep257",
@@ -57,7 +60,7 @@
     "editor.tabSize": 4
   },
   "[cpp]": {
-    "editor.defaultFormatter": "ms-iot.vscode-ros",
+    "editor.defaultFormatter": "ms-vscode.cpptools",
     "editor.formatOnType": true,
     "editor.formatOnSave": true
   },
@@ -154,5 +157,5 @@
   "uncrustify.configPath.linux": "/opt/ros/jazzy/lib/python3.12/site-packages/ament_uncrustify/configuration/ament_code_style_0_78.cfg",
   "uncrustify.useReplaceOption": true,
   "uncrustify.debug": true,
-  "commentTranslate.hover.enabled": true
+  "commentTranslate.hover.enabled": true,
 }
