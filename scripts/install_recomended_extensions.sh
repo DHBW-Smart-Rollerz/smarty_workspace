@@ -7,14 +7,14 @@ if [ ! -f ".vscode/extensions.json" ]; then
   exit 1
 fi
 
-# Read the recommended extensions from the extensions.json file
-recommended_extensions=$(jq -r '.recommendations[]' .vscode/extensions.json)
-
 # Check if jq is installed
 if ! command -v jq &> /dev/null; then
   echo "jq is not installed. Please install jq to parse JSON files."
   exit 1
 fi
+
+# Read the recommended extensions from the extensions.json file
+recommended_extensions=$(jq -r '.recommendations[]' .vscode/extensions.json)
 
 # Install each recommended extension
 for extension in $recommended_extensions; do

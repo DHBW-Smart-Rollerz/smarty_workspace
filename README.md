@@ -8,21 +8,25 @@ This is the basic ros2 workspace for the Smarty project. It contains useful setu
 
 - `.vscode/`: Contains the vscode settings and configurations for the workspace
   - `c_cpp_properties.json`: Contains the c/c++ properties for the workspace
-  - `extensions.json`: Contains the list of extensions to install
+  - `extensions.json`: Contains the list of recommended extensions (installed by `make install_extensions`)
   - `launch.json`: Contains the launch configurations for the workspace
   - `settings.json`: Contains the settings for the workspace
   - `tasks.json`: Contains the tasks for the workspace
 - `scripts/`: Contains useful scripts for the workspace
-  - `build.sh`: Build script for the workspace
-  - `install_dependencies.sh`: Install script for the ros dependencies
-  - `test.sh`: Test script for the ros packages
+  - `build.sh`: Build script for the workspace (`make build`)
+  - `install_dependencies.sh`: Install script for the ros dependencies (`make rosdep`)
+  - `install_recomended_extensions.sh`: Install script for the recommended VS Code extensions (`make install_extensions`)
+  - `test.sh`: Checks the python code with ruff and pyright and runs the tests of all packages (`make test`)
 - `src/`: Contains the source code for the project (**clone here the ros2 packages**)
   - `smarty_utils/`: Contains the utility packages for the project (**after setup available**)
   - `camera_preprocessing/`: Contains the camera preprocessing package for the project (**after setup available**)
   - ... other packages
 - `.gitignore`: Gitignore file for the workspace (**ignores the build and install folders**)
 - `.pre-commit-config.yaml`: Configuration file for the pre-commit hooks
+- `ruff.toml`: Configuration of [Ruff](https://docs.astral.sh/ruff/) (python linter and formatter) for all packages in `src/`
 - `default.repos`: Default repos file for the vcs tool (**clones the base packages**)
+- `Makefile`: All commands for the daily work with the workspace (see [Usage](#usage))
+- `requirements.txt`: Python tools for the workspace (`colcon`, `pre-commit`, `ruff`, `pyright`, `pytest`)
 - `LICENSE`: License file
 - `README.md`: This file
 - `setup.sh`: Setup script for the workspace
@@ -36,16 +40,16 @@ The setup is divided into two parts:
 
 ### 1. Setup repository and workspace
 
-1. Clone the repository
-2. Run the setup script
+1. Clone the repository into your home directory (`~/smarty_workspace`)
+2. Run the setup and build the workspace
 ```bash
-#If not activated:
-pyenv  activate default # or your private environment
-pip install -r requirements.txt
-./setup.sh
+cd ~/smarty_workspace
+pyenv activate default # or your private environment
+make setup
+make build
 ```
 
-This script clones the base packages and installs the dependencies. Currently, the following packages are cloned:
+`make setup` clones the base packages and installs the dependencies (including `colcon`, `pre-commit`, `ruff`, `pyright` and `pytest` into the active Python environment). Currently, the following packages are cloned:
 
 - [smarty_utils](https://github.com/DHBW-Smart-Rollerz/smarty_utils)
 - [camera_preprocessing](https://github.com/DHBW-Smart-Rollerz/camera_preprocessing)
@@ -54,11 +58,11 @@ Furthermore, the pre-commit hooks are installed. More about the pre-commit hooks
 
 ### 2. Setup VSCode
 
-1. Install the recommended extensions:
+1. Install the recommended extensions (already done by `make setup`):
 
   ```bash
-  cd <path/to/smarty_workspace>
-  ./scripts/install_extensions.sh
+  cd ~/smarty_workspace
+  make install_extensions
   ```
 
 2. Open the workspace in VSCode and check if the extensions are installed.
@@ -72,10 +76,9 @@ Furthermore, the pre-commit hooks are installed. More about the pre-commit hooks
 
 Open the folder in VSCode and start developing. The workspace is configured to use the pre-commit hooks. This means that the code is checked before committing. If the code is not compliant with the rules, the commit is rejected and the files are changed accordingly. We use the following pre-commit hooks:
 
-- `black`: Code formatter for python to have a consistent code style
-- `flake8`: Linter for python to check the code for errors and style
-- `pep257`: Linter for python to check the docstrings (we use the pydocstyle formatter)
-- `isort`: Import sorter for python to have a consistent import order
+- `ruff-check`: Linter for python to check the code for errors and style, the import order and the docstrings (fixes many issues automatically)
+- `ruff-format`: Code formatter for python to have a consistent code style
+- `ament_uncrustify`: Code formatter for C++ (ROS 2 code style)
 - `check-yaml`: Linter for yaml files to check the syntax
 - `end-of-file-fixer`: Linter to check if the files end with a newline
 - `trailing-whitespace`: Linter to check for trailing whitespaces
@@ -86,22 +89,18 @@ To run the pre-commit hooks manually, use the following command:
 pre-commit run --all-files
 ```
 
-To run the tests, use the following command:
+The workspace is used via `make` (always run it from the workspace root):
 
 ```bash
-./scripts/test.sh
-```
-
-To build the workspace, use the following command:
-
-```bash
-./scripts/build.sh
-```
-
-To install the dependencies, use the following command:
-
-```bash
-./scripts/install_dependencies.sh
+make build                          # build all packages
+make build PKG=<package-name>       # build a single package (or PKG="<pkg1> <pkg2>")
+make test                           # check the python code with ruff and pyright and run the tests of all packages
+make clean                          # remove build/, install/ and log/
+make rosdep                         # install the ROS dependencies
+make install_python                 # install all requirements.txt files into the active Python env
+make pull_src                       # git pull all packages in src/
+make update_precommit               # copy .pre-commit-config.yaml to all packages and install the hooks
+make install_extensions             # install the recommended VS Code extensions
 ```
 
 To run the setup script again, use the following command:

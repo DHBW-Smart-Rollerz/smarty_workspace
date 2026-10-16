@@ -8,9 +8,8 @@
             "includePath": [
                 "/opt/ros/jazzy/include/**",
                 "/usr/include/**",
-                "/home/${USER}/smarty_workspace/install/**",
-                "/home/${USER}/smarty_workspace/src/**",
-                "${workspaceFolder}/src/controllers/include"
+                "${workspaceFolder}/install/**",
+                "${workspaceFolder}/src/**"
             ],
             "name": "ROS",
             "intelliSenseMode": "gcc-x64",

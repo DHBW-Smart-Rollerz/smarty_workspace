@@ -1,0 +1,96 @@
+# Ruff configuration (linter + formatter) for all Python packages in the workspace.
+# Ruff replaces black (formatter), isort (import sorting), flake8 and pydocstyle (linting).
+# It is used by the pre-commit hooks, by `make test` and by the Ruff VS Code extension.
+# Packages in src/ use this file automatically, because Ruff searches the parent
+# directories for it.
+
+line-length = 88
+target-version = "py312"
+
+[lint]
+ignore = [
+    "ANN204",  # Missing return type for __init__
+    "ANN401",  # Allow typing.Any
+    "D1",      # Missing docstrings
+    "EM101",   # Allow string literal in Exception
+    "EM102",   # Allow f-string literal in Exception
+    "FBT001",  # Allow boolean typed positional arguments
+    "G004",    # Allow f-strings in logging
+    "ISC001",  # Recommended to ignore when using formatter
+    "PLR0912", # Do not flag too many branches
+    "PLR0913", # Do not flag too many arguments
+    "RET504",  # Allow "unnecessary" assignments before return
+    "TRY003",  # Allow long/specific messages in Exceptions
+]
+select = [
+    # --- Core & Modernization ---
+    "E",  # Style errors (pycodestyle)
+    "F",  # Logic errors (Pyflakes)
+    "FA", # Ensures modern __future__ annotations (flake8-future-annotations)
+    "I",  # Import sorting (isort)
+    "UP", # Modernize syntax (pyupgrade)
+    "W",  # Style warnings (pycodestyle)
+
+    # --- Documentation & Naming ---
+    "ANN", # Enforce type hints (flake8-annotations)
+    "D",   # Docstring compliance (pydocstyle)
+    "N",   # Naming conventions (pep8-naming)
+
+    # --- Best Practices & Bug Prevention ---
+    "B",    # Common bugs/design flaws (flake8-bugbear)
+    "C4",   # Better list/dict comprehensions (flake8-comprehensions)
+    "FURB", # Modernize/Refurbish old code (refurb)
+    "PIE",  # Miscellaneous style cleanup (flake8-pie)
+    "PL",   # General quality/complexity (Pylint: PLC, PLE, PLR, PLW)
+    "RET",  # Consistent return statements (flake8-return)
+    "RUF",  # Ruff-specific rules
+    "S",    # Security auditing (flake8-bandit)
+    "SIM",  # Simplify code logic (flake8-simplify)
+
+    # --- Specialized Tooling ---
+    "DTZ", # Enforce timezone-aware datetimes (flake8-datetimez)
+    "G",   # Proper logging format strings (flake8-logging-format)
+    "LOG", # General logging best practices (flake8-logging)
+    "NPY", # NumPy specific rules (NumPy-specific rules)
+    "PT",  # Pytest best practices (flake8-pytest-style)
+    "PTH", # Use modern pathlib instead of os.path (flake8-use-pathlib)
+    "PYI", # Linting for type stub files (flake8-pyi)
+
+    # --- Cleaning & Refactoring ---
+    "A",   # Prevent shadowing built-ins (flake8-builtins)
+    "ARG", # Detect unused function arguments (flake8-unused-arguments)
+    "EM",  # Clean exception error messages (flake8-errmsg)
+    "ERA", # Find and remove commented-out code (eradicate)
+    "TC",  # Manage type-checking-only imports (flake8-type-checking)
+    "TID", # Tidy up imports/relative imports (flake8-tidy-imports)
+    "TRY", # Better exception handling (tryceratops)
+
+    # --- Formatting & Syntax ---
+    "FBT",  # Avoid "boolean traps" in function args (flake8-boolean-trap)
+    "PERF", # Performance-related lints (perflint)
+
+    # --- Work in Progress / Reminders ---
+    "FIX001", # Flag FIXME comments
+    "TD005",  # Missing description in TODO
+    "TD006",  # TODO must be written in capital letters
+    "TD007",  # Missing space after the colon in TODO
+]
+
+[lint.pydocstyle]
+convention = "google"
+
+# The patterns start with "**/", because they have to match inside every package in src/
+# (ROS packages use test/ for their tests).
+[lint.per-file-ignores]
+"**/{test,tests}/**" = [
+    "ANN",     # Don't require types for tests
+    "ARG",     # Unused args are common in fixtures/mocks
+    "D",       # Don't require docstrings for tests
+    "E501",    # Ignore line length in tests
+    "PLR0917", # Allow many positional arguments (e.g. in parametrize/fixtures)
+    "PLR2004", # Magic values are okay in test comparisons
+    "S101",    # Use of assert is required in tests
+]
+
+[format]
+docstring-code-format = true
