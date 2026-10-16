@@ -1,0 +1,98 @@
+name: Lint Reusable
+
+# Checks the Python code with ruff (lint + format) and the C/C++ code with ament_uncrustify,
+# using the ruff.toml and ruff version of the smarty_workspace. The number of findings is
+# uploaded as artifact "lint-result" (read by the dashboard of the organization profile).
+
+on:
+  workflow_call:
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    container:
+      image: ros:jazzy-ros-base
+    steps:
+    - name: 🔧 Install linters
+      run: |
+        apt-get update && apt-get install -y git python3-venv jq ros-jazzy-ament-uncrustify
+        python3 -m venv /tmp/venv
+        /tmp/venv/bin/pip install ruff==0.17.1  # same version as in .pre-commit-config.yaml
+
+    - name: 🚀 Checkout code
+      uses: actions/checkout@v4
+
+    - name: 📥 Checkout workspace configuration
+      uses: actions/checkout@v4
+      with:
+        repository: DHBW-Smart-Rollerz/smarty_workspace
+        ref: jazzy
+        path: .smarty_workspace
+
+    - name: 📄 Use workspace ruff.toml
+      run: |
+        cp .smarty_workspace/ruff.toml /tmp/ruff.toml
+        rm -rf .smarty_workspace
+
+    - name: 🔍 Lint
+      shell: bash
+      run: |
+        git config --global --add safe.directory "$GITHUB_WORKSPACE"
+        RUFF="/tmp/venv/bin/ruff"
+        PYTHON_FILES=$(git ls-files '*.py' | wc -l)
+        CPP_FILES=$(git ls-files '*.c' '*.cpp' '*.h' '*.hpp' | wc -l)
+
+        echo "::group::ruff check"
+        $RUFF check --config /tmp/ruff.toml --exit-zero . || true
+        echo "::endgroup::"
+        RUFF_CHECK=$($RUFF check --config /tmp/ruff.toml --exit-zero --output-format json . 2>/dev/null | jq length)
+        RUFF_CHECK=${RUFF_CHECK:-0}
+
+        echo "::group::ruff format"
+        $RUFF format --config /tmp/ruff.toml --check --diff . || true
+        echo "::endgroup::"
+        RUFF_FORMAT=$($RUFF format --config /tmp/ruff.toml --check --output-format json . 2>/dev/null | jq length) || true
+        RUFF_FORMAT=${RUFF_FORMAT:-0}
+
+        echo "::group::ament_uncrustify"
+        UNCRUSTIFY=0
+        source /opt/ros/jazzy/setup.bash
+        while read -r file; do
+          [ -n "$file" ] || continue
+          ament_uncrustify "$file" || UNCRUSTIFY=$((UNCRUSTIFY + 1))
+        done < <(git ls-files '*.c' '*.cpp' '*.h' '*.hpp')
+        echo "::endgroup::"
+
+        jq -n \
+          --argjson python_files "$PYTHON_FILES" --argjson cpp_files "$CPP_FILES" \
+          --argjson ruff_check "$RUFF_CHECK" --argjson ruff_format "$RUFF_FORMAT" \
+          --argjson uncrustify "$UNCRUSTIFY" \
+          '$ARGS.named' > /tmp/lint-result.json
+        cat /tmp/lint-result.json
+
+        {
+          echo "### Lint result"
+          echo "| Check | Findings |"
+          echo "| --- | --- |"
+          echo "| ruff check (issues) | $RUFF_CHECK |"
+          echo "| ruff format (files to reformat) | $RUFF_FORMAT |"
+          echo "| ament_uncrustify (files to reformat) | $UNCRUSTIFY |"
+          echo
+          echo "Fix locally with \`pre-commit run --all-files\` (or \`ruff check --fix\`, \`ruff format\`, \`ament_uncrustify --reformat\`)."
+        } >> "$GITHUB_STEP_SUMMARY"
+
+    - name: 📤 Upload lint result
+      uses: actions/upload-artifact@v4
+      with:
+        name: lint-result
+        path: /tmp/lint-result.json
+        retention-days: 90
+
+    - name: 🎯 Finish
+      run: |
+        TOTAL=$(jq '.ruff_check + .ruff_format + .uncrustify' /tmp/lint-result.json)
+        if [ "$TOTAL" -gt 0 ]; then
+          echo "::error::$TOTAL lint/format findings, see the job summary"
+          exit 1
+        fi
+        echo "Lint finished without findings"

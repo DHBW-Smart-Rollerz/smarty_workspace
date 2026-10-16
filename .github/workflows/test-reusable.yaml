@@ -1,0 +1,140 @@
+name: Test Reusable
+
+# Builds the package (with its dependencies) and runs its tests with colcon. The flake8 and pep257
+# tests of the ROS package templates are skipped, because ruff replaces them (see lint-reusable.yaml).
+# The number of tests is uploaded as artifact "test-result" (read by the dashboard of the organization profile).
+
+on:
+  workflow_call:
+    inputs:
+      type:
+        description: 'Type of code to build [python, cpp]'
+        default: 'python'
+        required: true
+        type: string
+      package_name:
+        description: 'Name of the package to build'
+        required: true
+        default: 'my_package'
+        type: string
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    container:
+      image: osrf/ros:jazzy-desktop
+    steps:
+    - name: 🚀 Checkout code
+      uses: actions/checkout@v4
+
+    - name: 🔧 Install Dependencies
+      run: |
+        sudo apt-get update && sudo apt-get install -y \
+        python3-venv \
+        python3-pip \
+        catkin-tools \
+        python3-colcon-common-extensions \
+        git \
+        jq
+
+    - name: 📦 Setup workspace
+      run: |
+        mkdir -p /ros2_ws/src/${{ inputs.package_name}}
+        cp -r $GITHUB_WORKSPACE/* /ros2_ws/src/${{ inputs.package_name}}
+        python3 -m venv .venv
+        . .venv/bin/activate
+        sudo apt install -y ros-dev-tools build-essential cmake make
+
+        pip install setuptools==73.0.1 \
+        empy==3.3.4 \
+        lark-parser \
+        catkin_pkg \
+        numpy \
+        pytest
+
+        # Find all dependencies.repos files within the src directory
+        cd /ros2_ws
+        repos_files=$(find src -type f -name "dependencies.repos")
+
+        # Check if any dependencies.repos files were found
+        if [ -z "$repos_files" ]; then
+            echo "No dependencies.repos files found in $BASE_DIR."
+        else
+            echo "Found dependencies.repos files:"
+            echo "$repos_files"
+        fi
+
+        # Iterate over each found dependencies.repos file and install dependencies
+        for repos_file in $repos_files; do
+            echo "Installing dependencies from $repos_file"
+            vcs import < "$repos_file" src/
+        done
+
+        find src/* -maxdepth 3 -name requirements.txt -exec pip install -r {} \;
+
+    - name: 🛠️ Build packages
+      run: |
+        . .venv/bin/activate
+        if [ "${{ inputs.type }}" = "python" ]; then
+            echo "Building Python code"
+            bash -c "source /opt/ros/jazzy/setup.bash && cd /ros2_ws && colcon build --event-handlers console_cohesion+"
+        elif [ "${{ inputs.type }}" = "cpp" ]; then
+            echo "Building Cpp code"
+            bash -c "source /opt/ros/jazzy/setup.bash && cd /ros2_ws && colcon build --cmake-args -DBUILD_TESTING=ON --event-handlers console_cohesion+"
+        else
+            echo "Invalid type provided"
+            exit 1
+        fi
+
+    - name: 🧪 Run tests
+      shell: bash
+      run: |
+        . .venv/bin/activate
+        source /opt/ros/jazzy/setup.bash
+        cd /ros2_ws
+        # Test all packages of the repository (not the dependencies), failing tests are evaluated below
+        PACKAGES=$(colcon list --names-only --base-paths src/${{ inputs.package_name }})
+        echo "Testing packages: $PACKAGES"
+        colcon test --packages-select $PACKAGES --event-handlers console_cohesion+ \
+          --pytest-args -m "not flake8 and not pep257" \
+          --ctest-args -E "flake8|pep257" || true
+        # Only the tested packages have test results in build/
+        colcon test-result --test-result-base build --verbose | tee /tmp/test-result.txt || true
+
+        # "Summary: 12 tests, 0 errors, 1 failures, 2 skipped"
+        SUMMARY=$(grep '^Summary:' /tmp/test-result.txt | tail -1)
+        count() { echo "$SUMMARY" | grep -oE "[0-9]+ $1" | grep -oE '[0-9]+' || echo 0; }
+        TESTS=$(count tests?)
+        ERRORS=$(count errors?)
+        FAILURES=$(count failures?)
+        SKIPPED=$(count skipped)
+        PASSED=$((TESTS - ERRORS - FAILURES - SKIPPED)); [ "$PASSED" -ge 0 ] || PASSED=0
+
+        jq -n \
+          --argjson tests "$TESTS" --argjson passed "$PASSED" --argjson failed "$((ERRORS + FAILURES))" \
+          --argjson skipped "$SKIPPED" \
+          '$ARGS.named' > /tmp/test-result.json
+        cat /tmp/test-result.json
+
+        {
+          echo "### Test result"
+          echo "| Tests | Passed | Failed | Skipped |"
+          echo "| --- | --- | --- | --- |"
+          echo "| $TESTS | $PASSED | $((ERRORS + FAILURES)) | $SKIPPED |"
+        } >> "$GITHUB_STEP_SUMMARY"
+
+    - name: 📤 Upload test result
+      uses: actions/upload-artifact@v4
+      with:
+        name: test-result
+        path: /tmp/test-result.json
+        retention-days: 90
+
+    - name: 🎯 Finish
+      run: |
+        FAILED=$(jq .failed /tmp/test-result.json)
+        if [ "$FAILED" -gt 0 ]; then
+          echo "::error::$FAILED tests failed, see the job summary"
+          exit 1
+        fi
+        echo "Tests finished without failures"

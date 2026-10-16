@@ -4,7 +4,6 @@
     "tab.activeBorder": "#ffffff",
     "tab.activeBackground": "#373737"
   },
-
   // Python: Ruff formats the code and sorts the imports on save (configured in ruff.toml)
   "[python]": {
     "editor.defaultFormatter": "charliermarsh.ruff",
@@ -22,7 +21,6 @@
     "/opt/ros/jazzy/lib/python3.12/site-packages",
     "${workspaceFolder}/src/smarty_utils"
   ],
-
   // C/C++: Uncrustify formats the code on save with the ROS 2 code style
   // (same configuration as the ament_uncrustify pre-commit hook)
   "[cpp]": {
@@ -40,5 +38,5 @@
     "editor.quickSuggestions": {
       "strings": true
     }
-  }
-}
+  },
+  "ROS2.distro": "jazzy",

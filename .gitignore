@@ -13,6 +13,7 @@
 /.pytest_history/
 /wiki/
 /smarty_hooks/
+/.github-private/
 
 # Personal VS Code profiles (only the extensions are shared via .vscode/extensions.json)
 /.vscode/*.code-profile

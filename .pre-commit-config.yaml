@@ -27,7 +27,7 @@ repos:
 
   # C++: formatter (ROS 2 code style)
   - repo: https://github.com/DHBW-Smart-Rollerz/smarty_hooks
-    rev: v0.1.1
+    rev: v0.1.2
     hooks:
       - id: ament_uncrustify
 

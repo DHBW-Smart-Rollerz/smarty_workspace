@@ -1,12 +1,8 @@
-name: Build and Test Reusable
+name: Build Reusable
 
 on:
   workflow_call:
     inputs:
-      branch_pattern:
-        description: 'Branch pattern to trigger the workflow'
-        required: true
-        type: string
       type:
         description: 'Type of code to build [python, cpp]'
         default: 'python'
@@ -19,7 +15,7 @@ on:
         type: string
 
 jobs:
-  build-and-test:
+  build:
     runs-on: ubuntu-latest
     container:
       image: osrf/ros:jazzy-desktop
@@ -78,27 +74,11 @@ jobs:
             bash -c "source /opt/ros/jazzy/setup.bash && cd /ros2_ws && colcon build --event-handlers console_cohesion+"
         elif [ "${{ inputs.type }}" = "cpp" ]; then
             echo "Building Cpp code"
-            bash -c "source /opt/ros/jazzy/setup.bash && cd /ros2_ws && colcon build --cmake-args -DBUILD_TESTING=ON --event-handlers console_cohesion+"
-        else
-            echo "Invalid type provided"
-            exit 1
-        fi
-
-    - name: 🧪 Run tests
-      run: |
-        . .venv/bin/activate
-
-        if [ "${{ inputs.type }}" = "python" ]; then
-            echo "Skipping tests for now"
-            # bash -c "source /opt/ros/jazzy/setup.bash && cd /ros2_ws && colcon test --event-handlers console_cohesion+"
-        elif [ "${{ inputs.type }}" = "cpp" ]; then
-            echo "Testing Cpp code"
-            bash -c "source /opt/ros/jazzy/setup.bash && cd /ros2_ws && colcon test --packages-select ${{inputs.package_name}} --event-handlers console_cohesion+"
-            bash -c "source /opt/ros/jazzy/setup.bash && cd /ros2_ws && colcon test-result --all"
+            bash -c "source /opt/ros/jazzy/setup.bash && cd /ros2_ws && colcon build --event-handlers console_cohesion+"
         else
             echo "Invalid type provided"
             exit 1
         fi
 
     - name: 🎯 Finish
-      run: echo "Build and test finished"
+      run: echo "Build finished"
