@@ -23,7 +23,7 @@ pull_src:
 	find . -type d -name .git -exec sh -c 'if [ "$$(dirname "$$1")" != "." ]; then echo "Pulling in dir: $$(dirname "$$1")" && git -C "$$(dirname "$$1")" pull; fi' _ {} \;
 
 update_precommit:
-	find . -type d -name .git -exec sh -c 'if [ "$$(dirname "$$1")" != "." ]; then echo "Replacing in dir: $$(dirname "$$1")" && cp -f .pre-commit-config.yaml "$$(dirname "$$1")" && (cd "$$(dirname "$$1")" && pre-commit install -f --install-hooks); fi' _ {} \;
+	find src -type d -name .git -exec sh -c 'if [ "$$(dirname "$$1")" != "." ]; then echo "Replacing in dir: $$(dirname "$$1")" && cp -f .pre-commit-config.yaml "$$(dirname "$$1")" && (cd "$$(dirname "$$1")" && pre-commit install -f --install-hooks); fi' _ {} \;
 
 install_python:
 	# Install dependencies by finding all requirements.txt files (including colcon from ./requirements.txt)
