@@ -41,7 +41,9 @@ jobs:
       run: |
         mkdir -p /ros2_ws/src/${{ inputs.package_name}}
         cp -r $GITHUB_WORKSPACE/* /ros2_ws/src/${{ inputs.package_name}}
-        python3 -m venv .venv
+        # The venv sees the apt packages (colcon, ROS), colcon runs with its python
+        # (python -m colcon), so the tests see the packages of the requirements.txt
+        python3 -m venv --system-site-packages .venv
         . .venv/bin/activate
         sudo apt install -y ros-dev-tools build-essential cmake make
 
@@ -77,10 +79,10 @@ jobs:
         . .venv/bin/activate
         if [ "${{ inputs.type }}" = "python" ]; then
             echo "Building Python code"
-            bash -c "source /opt/ros/jazzy/setup.bash && cd /ros2_ws && colcon build --event-handlers console_cohesion+"
+            bash -c "source /opt/ros/jazzy/setup.bash && cd /ros2_ws && python -m colcon build --event-handlers console_cohesion+"
         elif [ "${{ inputs.type }}" = "cpp" ]; then
             echo "Building Cpp code"
-            bash -c "source /opt/ros/jazzy/setup.bash && cd /ros2_ws && colcon build --cmake-args -DBUILD_TESTING=ON --event-handlers console_cohesion+"
+            bash -c "source /opt/ros/jazzy/setup.bash && cd /ros2_ws && python -m colcon build --cmake-args -DBUILD_TESTING=ON --event-handlers console_cohesion+"
         else
             echo "Invalid type provided"
             exit 1
@@ -95,7 +97,7 @@ jobs:
         # Test all packages of the repository (not the dependencies), failing tests are evaluated below
         PACKAGES=$(colcon list --names-only --base-paths src/${{ inputs.package_name }})
         echo "Testing packages: $PACKAGES"
-        colcon test --packages-select $PACKAGES --event-handlers console_cohesion+ \
+        python -m colcon test --packages-select $PACKAGES --event-handlers console_cohesion+ \
           --pytest-args -m "not flake8 and not pep257" \
           --ctest-args -E "flake8|pep257" || true
         # Only the tested packages have test results in build/
