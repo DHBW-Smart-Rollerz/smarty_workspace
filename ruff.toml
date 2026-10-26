@@ -76,6 +76,12 @@ select = [
     "TD007",  # Missing space after the colon in TODO
 ]
 
+# ROS 2 packages have a launch/ directory, which makes Ruff treat the "launch" package
+# as first-party when run from the package root (CI), but not from the workspace
+# (pre-commit). Pin it so both sort the imports of launch files the same way.
+[lint.isort]
+known-third-party = ["launch"]
+
 [lint.pydocstyle]
 convention = "google"
 
