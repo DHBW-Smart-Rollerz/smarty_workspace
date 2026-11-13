@@ -15,6 +15,7 @@ import json
 import os
 import subprocess
 import sys
+import time
 import urllib.request
 from dataclasses import asdict
 from pathlib import Path
@@ -49,17 +50,32 @@ def clone(org: str, repo: str, branch: str, target: Path, token: str | None) -> 
         git("clone", "-q", "--depth", "1", "--branch", branch, url, str(target))
 
 
-def is_archived(org: str, repo: str, token: str | None) -> bool:
-    """Ask the GitHub API whether a repository is archived."""
-    request = urllib.request.Request(
-        f"https://api.github.com/repos/{org}/{repo}",
-        headers={"Authorization": f"Bearer {token}"} if token else {},
-    )
-    try:
-        with urllib.request.urlopen(request, timeout=10) as response:  # noqa: S310
-            return bool(json.load(response).get("archived"))
-    except OSError:
-        return False
+def archived_repos(org: str, token: str | None, attempts: int = 3) -> set[str]:
+    """Return the names of the archived repositories of the organization.
+
+    Raises instead of guessing on API errors, otherwise the graph (and the wiki)
+    would flip between "archived" and not on flaky requests.
+    """
+    archived = set()
+    page = 1
+    while True:
+        request = urllib.request.Request(
+            f"https://api.github.com/orgs/{org}/repos?per_page=100&page={page}",
+            headers={"Authorization": f"Bearer {token}"} if token else {},
+        )
+        for attempt in range(attempts):
+            try:
+                with urllib.request.urlopen(request, timeout=20) as response:  # noqa: S310
+                    repos = json.load(response)
+                break
+            except OSError:
+                if attempt == attempts - 1:
+                    raise
+                time.sleep(2**attempt)
+        archived.update(r["name"] for r in repos if r.get("archived"))
+        if len(repos) < 100:  # noqa: PLR2004
+            return archived
+        page += 1
 
 
 def main() -> int:
@@ -81,6 +97,7 @@ def main() -> int:
     token = os.environ.get("GH_TOKEN")
     args.repos_dir.mkdir(parents=True, exist_ok=True)
 
+    archived = archived_repos(org, token)
     sources = {}
     for repo, spec in config["repos"].items():
         branch = (spec or {}).get("branch", "jazzy")
@@ -89,7 +106,7 @@ def main() -> int:
             print(f"Cloning {repo}@{branch}", file=sys.stderr)
             clone(org, repo, branch, target, token)
         commit = git("rev-parse", "HEAD", cwd=target) if target.exists() else ""
-        sources[repo] = Source(repo, branch, commit, is_archived(org, repo, token))
+        sources[repo] = Source(repo, branch, commit, repo in archived)
 
     extractor = Extractor(args.repos_dir, WORKSPACE_DIR, config)
     nodes = extractor.extract()
