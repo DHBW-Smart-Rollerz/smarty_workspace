@@ -26,7 +26,7 @@ repos:
   tracking: {}
   crossing-detection: {}
   parking: {}
-  object_detection_lidar: {branch: develop}
+  object_detection_lidar: {}
 
 # Launch files that are not started by the launch scripts yet
 in_development:

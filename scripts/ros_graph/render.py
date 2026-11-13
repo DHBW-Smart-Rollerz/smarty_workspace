@@ -236,9 +236,20 @@ def _legend(layers: dict[str, Any]) -> list[str]:
     return lines
 
 
-def to_markdown(graph: Graph, warnings: list[str], image_dir: str) -> str:
+def to_markdown(
+    graph: Graph, warnings: list[str], image_dir: str, pending: list[str]
+) -> str:
     """Build the wiki page."""
     org = graph.config["org"]
+    pending_note = (
+        [
+            "Tracked, but not on the analyzed branch yet (added automatically once"
+            " merged): " + ", ".join(f"`{p}`" for p in pending),
+            "",
+        ]
+        if pending
+        else []
+    )
     md = [
         "# ROS Topic Graph",
         "",
@@ -253,6 +264,7 @@ def to_markdown(graph: Graph, warnings: list[str], image_dir: str) -> str:
         + " plus packages in development. Topic names are extracted from the"
         " source code and resolved with the YAML parameters of the launch files.",
         "",
+        *pending_note,
         f"[![ROS topic graph]({image_dir}/smarty_ros_graph.png)]"
         f"({image_dir}/smarty_ros_graph.svg)",
         "",

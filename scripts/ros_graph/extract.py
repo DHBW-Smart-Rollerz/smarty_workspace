@@ -67,6 +67,8 @@ class Extractor:
         self.workspace_dir = workspace_dir
         self.config = config
         self.warnings: list[str] = []
+        # in_development packages that are not on the analyzed branch yet
+        self.pending: list[str] = []
         self.packages: dict[str, Package] = {}
         for repo in config["repos"]:
             for xml in sorted((repos_dir / repo).rglob("package.xml")):
@@ -117,6 +119,10 @@ class Extractor:
                     )
 
         for entry in self.config.get("in_development", []):
+            # Not merged to the analyzed branch yet: added once it is
+            if not self._has_launch_file(entry["package"], entry["launch"]):
+                self.pending.append(entry["package"])
+                continue
             for launched in self._parse_launch_file(
                 entry["package"], entry["launch"], source="in_development"
             ):
@@ -151,6 +157,12 @@ class Extractor:
             elif words[:2] == ["topic", "pub"] and len(words) >= 4:  # noqa: PLR2004
                 commands.append(("pub", (words[2], words[3])))
         return commands
+
+    def _has_launch_file(self, package: str, launch_file: str) -> bool:
+        pkg = self.packages.get(package)
+        return pkg is not None and any(
+            ".git" not in p.parts for p in pkg.path.rglob(launch_file)
+        )
 
     def _parse_launch_file(
         self, package: str, launch_file: str, source: str

@@ -130,7 +130,7 @@ def main() -> int:
             check=True,
         )
     (out / "ROS-Topic-Graph.md").write_text(
-        to_markdown(graph, extractor.warnings, args.image_dir)
+        to_markdown(graph, extractor.warnings, args.image_dir, extractor.pending)
     )
     (image_out / "smarty_ros_graph.json").write_text(
         json.dumps([asdict(n) for n in nodes], indent=2) + "\n"
