@@ -1,0 +1,13 @@
+{
+  "enabledPlugins": {
+    "smarty-agent@smart-rollerz": true
+  },
+  "extraKnownMarketplaces": {
+    "smart-rollerz": {
+      "source": {
+        "repo": "DHBW-Smart-Rollerz/smarty_agent",
+        "source": "github"
+      }
+    }
+  }
+}

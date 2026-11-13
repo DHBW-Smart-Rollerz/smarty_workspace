@@ -17,3 +17,6 @@
 
 # Personal VS Code profiles (only the extensions are shared via .vscode/extensions.json)
 /.vscode/*.code-profile
+
+# Personal Claude Code settings
+/.claude/settings.local.json
