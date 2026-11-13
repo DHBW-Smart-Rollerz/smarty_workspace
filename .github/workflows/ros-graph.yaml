@@ -30,6 +30,14 @@ jobs:
   ros-graph:
     runs-on: ubuntu-latest
     steps:
+    - name: 🔑 Create App token
+      id: app-token
+      uses: actions/create-github-app-token@v2
+      with:
+        app-id: ${{ vars.ROS_GRAPH_APP_ID }}
+        private-key: ${{ secrets.ROS_GRAPH_APP_KEY }}
+        owner: ${{ github.repository_owner }}
+
     - name: 🚀 Checkout code
       uses: actions/checkout@v4
 
@@ -40,14 +48,14 @@ jobs:
 
     - name: 🕸️ Generate graph
       env:
-        GH_TOKEN: ${{ secrets.ROS_GRAPH_TOKEN }}
+        GH_TOKEN: ${{ steps.app-token.outputs.token }}
       run: |
         python3 scripts/ros_graph/ros_graph.py --clone \
           --repos-dir "$RUNNER_TEMP/repos" --out "$RUNNER_TEMP/out"
 
     - name: 📚 Publish to wiki
       env:
-        GH_TOKEN: ${{ secrets.ROS_GRAPH_TOKEN }}
+        GH_TOKEN: ${{ steps.app-token.outputs.token }}
         TRIGGER: ${{ github.event.client_payload.repo || github.event_name }}
       run: |
         git clone -q "https://x-access-token:${GH_TOKEN}@github.com/${WIKI_REPO}.git" wiki

@@ -53,18 +53,20 @@ graph and pushes it to the `.dotfiles` wiki. It runs
 
 ### Setup
 
-1. Create the organization secret `ROS_GRAPH_TOKEN` and give the workflow repositories
-   access to it. The token needs:
-   - read access to the contents of all repositories in `config.yaml` (some are
-     private),
-   - write access to the contents of `.dotfiles` (the wiki),
-   - write access to the contents of `smarty_workspace` (to send the
-     `repository_dispatch`).
+Authentication uses the GitHub App `smarty-ros-graph` of the organization
+(repository permission *Contents: Read and write*, installed on all repositories
+in `config.yaml` plus `.dotfiles` and `smarty_workspace`). Each run creates a
+short-lived installation token with `actions/create-github-app-token`.
 
-   A classic personal access token with the `repo` scope works. Use a bot or shared
-   account, so the automation does not break when the owner leaves the team.
-2. Copy `trigger-ros-graph.yaml` to `.github/workflows/` of every repository in
+1. Organization variable `ROS_GRAPH_APP_ID`: the App ID.
+2. Organization secret `ROS_GRAPH_APP_KEY`: the content of the App's private key
+   (`.pem`).
+3. Give `smarty_workspace` and every repository with the trigger workflow access to
+   both (repository access of the variable and the secret).
+4. Copy `trigger-ros-graph.yaml` to `.github/workflows/` of every repository in
    `config.yaml` (optional, the nightly run covers the rest).
+
+If the private key leaks, revoke it in the App settings and generate a new one.
 
 ### Adding a repository
 
