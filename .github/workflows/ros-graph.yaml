@@ -1,0 +1,72 @@
+name: ROS Graph
+
+# Regenerates the ROS topic graph and publishes it to the .dotfiles wiki.
+# Triggered by pushes to the analyzed repositories (repository_dispatch, see
+# scripts/ros_graph/README.md), by changes of the launch scripts and nightly.
+
+on:
+  push:
+    branches: [jazzy]
+    paths:
+      - all.launch.sh
+      - base.launch.sh
+      - scripts/ros_graph/**
+      - .github/workflows/ros-graph.yaml
+  repository_dispatch:
+    types: [ros-graph]
+  schedule:
+    - cron: '0 3 * * *'
+  workflow_dispatch:
+
+# Queue runs instead of pushing to the wiki concurrently
+concurrency:
+  group: ros-graph
+  cancel-in-progress: false
+
+env:
+  WIKI_REPO: DHBW-Smart-Rollerz/.dotfiles.wiki
+
+jobs:
+  ros-graph:
+    runs-on: ubuntu-latest
+    steps:
+    - name: 🔑 Create App token
+      id: app-token
+      uses: actions/create-github-app-token@v2
+      with:
+        app-id: ${{ vars.ROS_GRAPH_APP_ID }}
+        private-key: ${{ secrets.ROS_GRAPH_APP_KEY }}
+        owner: ${{ github.repository_owner }}
+
+    - name: 🚀 Checkout code
+      uses: actions/checkout@v4
+
+    - name: 🔧 Install Dependencies
+      run: |
+        sudo apt-get update && sudo apt-get install -y graphviz
+        pip install pyyaml
+
+    - name: 🕸️ Generate graph
+      env:
+        GH_TOKEN: ${{ steps.app-token.outputs.token }}
+      run: |
+        python3 scripts/ros_graph/ros_graph.py --clone \
+          --repos-dir "$RUNNER_TEMP/repos" --out "$RUNNER_TEMP/out"
+
+    - name: 📚 Publish to wiki
+      env:
+        GH_TOKEN: ${{ steps.app-token.outputs.token }}
+        TRIGGER: ${{ github.event.client_payload.repo || github.event_name }}
+      run: |
+        git clone -q "https://x-access-token:${GH_TOKEN}@github.com/${WIKI_REPO}.git" wiki
+        cp -r "$RUNNER_TEMP/out/." wiki/
+        cd wiki
+        git add ROS-Topic-Graph.md images/ros_graph
+        if git diff --cached --quiet; then
+          echo "Graph unchanged, nothing to publish"
+          exit 0
+        fi
+        git -c user.name="github-actions[bot]" \
+            -c user.email="41898282+github-actions[bot]@users.noreply.github.com" \
+            commit -q -m "Update ROS topic graph (${TRIGGER})"
+        git push -q

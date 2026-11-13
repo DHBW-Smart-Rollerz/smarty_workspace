@@ -1,0 +1,90 @@
+# Configuration of the ROS topic graph generator (see README.md in this folder).
+
+org: DHBW-Smart-Rollerz
+
+# Launch scripts of this workspace that define which nodes run on the vehicle
+launch_scripts:
+  - all.launch.sh
+  - base.launch.sh
+
+# Packages of the launch scripts that are not drawn
+ignore_packages:
+  - simulation  # only started in simulation mode
+
+# Repositories to analyze (branch defaults to "jazzy")
+repos:
+  smarty_utils: {}
+  vimbax_ros2_driver: {}
+  camera_preprocessing: {}
+  lane_detection_ai: {}
+  object_detection: {}
+  pose_estimation: {}
+  pathplanning: {}
+  state_machine: {}
+  querregelung: {}
+  controllers: {branch: longitutal}
+  tracking: {}
+  crossing-detection: {}
+  parking: {}
+  object_detection_lidar: {branch: develop}
+
+# Launch files that are not started by the launch scripts yet
+in_development:
+  - {package: tracking, launch: object_tracking.launch.py}
+  - {package: crossing_detection, launch: crossing_detection.launch.py}
+  - {package: parking, launch: parking_perception.launch.py}
+  - {package: object_detection_lidar, launch: object_detection_lidar.launch.py}
+
+# Color layers of the graph (assigned by ROS package)
+layers:
+  hw:
+    label: Hardware & Drivers
+    color: "#dbe9f6"
+    packages: [vimbax_camera, uart, ros2cli]
+  perception:
+    label: Perception
+    color: "#d9f0d3"
+    packages: [camera_preprocessing, lane_detection_ai, object_detection, pose_estimation]
+  planning:
+    label: Planning & Decision
+    color: "#fde9c9"
+    packages: [pathplanning, state_machine]
+  control:
+    label: Control
+    color: "#f6d5d5"
+    packages: [querregelung, controllers]
+  dev:
+    label: In development (not in launch scripts)
+    color: "#ececec"
+    packages: []
+
+# Nodes whose topics cannot be extracted from the source (key: package/executable)
+node_overrides:
+  querregelung/querregelung:
+    name: querregelung
+    note: Simulink generated code
+    publishes:
+      /control/steering_angle/target: std_msgs/Int16
+    subscribes:
+      /path_planning/target/pose: geometry_msgs/Vector3
+      /sensor/velocity: std_msgs/Float32
+      /control/active: std_msgs/Bool
+
+# Producers outside of the organization
+external_nodes:
+  - name: RPLiDAR A2 driver
+    note: external, not in org
+    publishes:
+      /scan: sensor_msgs/LaserScan
+
+# Hardware connected to ROS nodes (by node name)
+hardware:
+  - name: Allied Vision Alvium
+    note: camera
+    to: [vimbax_camera]
+    label: USB3
+  - name: embedded_mainboard
+    note: ESP32 · /dev/ttyUSB0
+    to: [uart_publisher]
+    from: [minimal_subscriber]
+    label: UART
