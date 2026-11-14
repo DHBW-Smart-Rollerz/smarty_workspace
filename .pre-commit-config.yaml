@@ -3,10 +3,16 @@ repos:
   - repo: https://github.com/astral-sh/ruff-pre-commit
     rev: v0.17.1  # update with `pre-commit autoupdate`
     hooks:
+      # Pass the workspace config explicitly like the Lint CI does. Ruff then resolves
+      # the first-party packages relative to the repository (not the workspace), so
+      # imports of the own package are sorted the same way locally and in CI.
       - id: ruff-check
         args:
           - --fix
+          - --config=../../ruff.toml
       - id: ruff-format
+        args:
+          - --config=../../ruff.toml
 
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.1.0  # this is optional, use `pre-commit autoupdate` to get the latest rev!
